@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  {# viewport = garante que o layout se adapte bem em celulares/tablets #}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {# Bloco de título dinâmico: se o template filho não definir,
+     cai no padrão "Rota do Motoboy • GICON" #}
+  <title>{% block title %}Rota do Motoboy • GICON{% endblock %}</title>
+
+  {# Manifesto PWA (Progressive Web App)
+     Permite instalar o sistema como app no celular #}
+  <link rel="manifest" href="/static/manifest.webmanifest">
+
+  {# CSS principal com todo o estilo do sistema #}
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="with-bg">
+  {# Máscara preta translúcida em cima da imagem de fundo
+     (ajuda a dar contraste pro texto ficar legível) #}
+  <div class="bg-mask"></div>
+
+  {# Barra superior (topbar) fixa no topo #}
+  <header class="topbar">
+    {# Marca da empresa #}
+    <div class="brand">
+      <img src="/static/img/gicon-marca.svg" alt="GICON" class="brand-logo">
+      <span class="brand-text">GICON</span>
+    </div>
+
+    {# Menu de navegação (links rápidos) #}
+    <nav>
+      <a href="/moto/ontem">Ontem</a> |
+      <a href="/moto/hoje">Hoje</a> |
+      <a href="/moto/amanha">Amanhã</a> |
+      <a href="/logout">Sair</a>
+    </nav>
+  </header>
+
+  {# ======================
+     Bloco de conteúdo principal
+     ======================
+     Aqui os templates filhos (login.html, rota.html, etc.)
+     injetam o conteúdo dentro do block content
+  #}
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  {# ======================
+     Service Worker
+     ======================
+     Responsável por cache offline e recursos PWA.
+     (carregado só se existir /static/sw.js)
+  #}
+</body>
+</html>

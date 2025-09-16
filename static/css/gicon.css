@@ -1,0 +1,107 @@
+:root{
+  /* Variáveis globais de estilo da marca GICON */
+  --gicon-bg: url('../img/bg-ponte.jpg');        /* Imagem de fundo padrão (ponte) */
+  --gicon-primary: #2FA1C7;                      /* Cor primária (azul GICON) */
+  --gicon-primary-600: #2487a8;                  /* Tom mais escuro do azul (hover/active) */
+  --gicon-dark: #0f1418;                         /* Cor de fundo escura */
+  --gicon-glass: rgba(255,255,255,.06);          /* Efeito "vidro fosco" translúcido */
+  --gicon-border: rgba(255,255,255,.12);         /* Cor de borda suave */
+}
+
+* {
+  /* Fonte padrão para toda a interface */
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+body.bg-cover{
+  /* Fundo fixo e coberto (quando classe bg-cover está no body) */
+  background: var(--gicon-dark) no-repeat center/cover fixed;
+}
+
+.bg-layer{
+  /* Camada de fundo com overlay escuro e imagem */
+  position: fixed; inset: 0; /* ocupa a tela toda */
+  background: linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.65)), 
+              var(--gicon-bg) center/cover no-repeat fixed; /* gradiente + imagem */
+  filter: grayscale(100%);  /* deixa em preto e branco */
+  z-index: -1;              /* fica atrás do conteúdo */
+}
+
+.content-wrapper{ 
+  min-height: 75vh;          /* garante que tenha altura mínima de 75% da tela */
+  padding-bottom: 6rem;      /* espaço para o rodapé/banner */
+}
+.min-vh-75{ min-height: 75vh; } /* classe utilitária para forçar altura */
+
+.glass{
+  /* Efeito "vidro" translúcido em cards/caixas */
+  background: var(--gicon-glass);
+  backdrop-filter: blur(10px);          /* borrado de fundo */
+  -webkit-backdrop-filter: blur(10px);  /* compatibilidade Safari */
+  border: 1px solid var(--gicon-border);
+  border-radius: 1rem;                  /* cantos arredondados */
+}
+
+.auth-card{ 
+  max-width: 480px; /* largura máxima do card de login */
+  width: 100%; 
+}
+
+.btn-primary{
+  /* Botão principal customizado com a cor GICON */
+  --bs-btn-bg: var(--gicon-primary);
+  --bs-btn-border-color: var(--gicon-primary);
+  --bs-btn-hover-bg: var(--gicon-primary-600);
+  --bs-btn-hover-border-color: var(--gicon-primary-600);
+  --bs-btn-active-bg: var(--gicon-primary-600);
+  --bs-btn-active-border-color: var(--gicon-primary-600);
+}
+
+.table-dark{ 
+  /* Fundo das tabelas escuras */
+  --bs-table-bg: rgba(0,0,0,.35); 
+}
+
+.footer-banner{
+  /* Banner/rodapé fixo no final da tela */
+  position: fixed; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,.55);
+  border-top: 1px solid var(--gicon-border);
+  color: #fff; 
+  padding: .75rem 0;
+}
+
+.flash-zone{ 
+  /* Zona de alertas (mensagens de erro/sucesso) */
+  position: sticky; 
+  top: 1rem; 
+  z-index: 1020; /* fica acima dos outros elementos */
+}
+
+.badge[class*='bg-status']{ 
+  /* Badges de status (pendente, andamento, concluída, cancelada) */
+  padding:.5rem .75rem; 
+  border-radius:.8rem; 
+}
+.bg-status-pendente{ background:#6c757d; }     /* cinza */
+.bg-status-andamento{ background:#ffc107; color:#111; } /* amarelo + texto escuro */
+.bg-status-concluida{ background:#198754; }    /* verde */
+.bg-status-cancelada{ background:#dc3545; }    /* vermelho */
+
+.form-control, .form-select{
+  /* Campos de formulário (input, select) no tema escuro */
+  background-color: rgba(255,255,255,.05);
+  border-color: var(--gicon-border);
+  color: #e8eef2; /* texto claro */
+}
+.form-control:focus, .form-select:focus{
+  /* Estilo quando campo está em foco */
+  background-color: rgba(255,255,255,.08);
+  border-color: var(--gicon-primary); /* borda azul */
+  color: #fff;
+  box-shadow: 0 0 0 .2rem rgba(47,161,199,.15); /* brilho leve */
+}
+.form-label{ color:#e0e6ea; } /* cor dos labels */
+
+.navbar .nav-link{ color:#e0e6ea; }       /* links do menu */
+.navbar .nav-link:hover{ color:#fff; }    /* hover = branco */

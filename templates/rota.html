@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1 class="page-title">Rota do dia</h1>
+  <p class="page-sub">{{ data_fmt }}</p>
+
+  <!-- Barra de data -->
+  <form class="datebar sticky" id="date-form" aria-label="Seleção de data">
+    <div class="datebar-inner">
+      <span class="date-icon" aria-hidden="true">📅</span>
+      <input type="date" id="data-dia" value="{{ data_iso }}" aria-label="Escolher data">
+      <button type="submit" class="btn-go">Ir</button>
+    </div>
+  </form>
+
+  <p class="back-today">
+    <a class="link" href="{{ url_for('rota_hoje') }}">Voltar para hoje</a>
+  </p>
+
+  <!-- KPIs -->
+  <div class="stats">
+    <div class="stat-card kpi-primary">
+      <div class="kpi-icon">🧾</div>
+      <div>
+        <div class="kpi">{{ counters.total }}</div>
+        <div class="kpi-label">Total</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="kpi-icon">🌅</div>
+      <div>
+        <div class="kpi">{{ counters.manha }}</div>
+        <div class="kpi-label">Manhã</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="kpi-icon">🌇</div>
+      <div>
+        <div class="kpi">{{ counters.tarde }}</div>
+        <div class="kpi-label">Tarde</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Listas por período -->
+  {% for periodo, itens in dados.items() %}
+    <div class="section-head">
+      <h2>Rota – {{ periodo }}</h2>
+      <span class="pill">{{ itens|length }}</span>
+    </div>
+
+    {% if not itens %}
+      <div class="card muted">Sem itens para {{ periodo }}.</div>
+    {% endif %}
+
+    <div class="grid">
+      {% for it in itens %}
+        <div class="cartao {{ 'is-done' if it.__done }}">
+          <!-- Cabeçalho -->
+          <div class="cartao-head">
+            <div class="empresa">{{ it.Empresa }}</div>
+            {% if it.Documento %}
+              <span class="doc-badge">{{ it.Documento }}</span>
+            {% endif %}
+          </div>
+
+          <!-- Corpo -->
+          <div class="linha">
+            <span class="lb">Pegar com</span>
+            <span class="vl">{{ it.PegarCom }}</span>
+          </div>
+          <div class="linha">
+            <span class="lb">Solicitante</span>
+            <span class="vl">{{ it.Solicitante }}</span>
+          </div>
+          {% if it.Obs %}
+          <div class="linha">
+            <span class="lb">Obs</span>
+            <span class="vl obs">{{ it.Obs }}</span>
+          </div>
+          {% endif %}
+
+          <!-- Rodapé -->
+          <div class="card-actions">
+            {% if it.__carregado %}
+              <span class="pill pill-overdue">
+                {{ 'Atrasado ' ~ it.__dias_atraso ~ 'd' if it.__dias_atraso else 'Atrasado' }}
+              </span>
+            {% endif %}
+
+            {% if not it.__done %}
+              {# ===== BOTÃO REAGENDAR (desativado) =====
+              <button type="button" class="btn-resched" data-id="{{ it.__id }}">Reagendar</button>
+              #}
+              <button type="button" class="btn-done" data-id="{{ it.__id }}">Marcar como feito</button>
+            {% else %}
+              <span class="pill pill-done">feito</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  {# ===== MODAL / INPUTS DE REAGENDAMENTO (desativados) =====
+  <input type="date" id="resched-picker" class="visually-hidden">
+
+  <div id="date-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="date-modal-title">
+    <div class="modal-box">
+      <h3 id="date-modal-title" class="modal-title">Reagendar</h3>
+      <p id="date-modal-desc" class="modal-text"></p>
+      <div class="modal-field">
+        <input type="date" id="modal-date" aria-label="Escolher nova data">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="modal-cancel">Cancelar</button>
+        <button type="button" class="btn btn-primary"  id="modal-ok">OK</button>
+      </div>
+    </div>
+  </div>
+  #}
+
+  <script src="/static/js/rota.js" defer></script>
+{% endblock %}

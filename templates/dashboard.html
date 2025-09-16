@@ -1,0 +1,130 @@
+{% extends 'base.html' %} 
+{# esse template herda a estrutura do base.html #}
+
+{% block title %}Painel · GICON{% endblock %}
+{# define o título que vai aparecer na aba do navegador #}
+
+{% block content %}
+<!-- Área dos KPIs principais -->
+<div class="row g-4 mb-4">
+  
+  <!-- Card 1: Solicitações de hoje -->
+  <div class="col-12 col-md-4">
+    <div class="card glass shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">Solicitações hoje</div>
+            <!-- Mostra o número de solicitações de hoje. Se não houver, mostra 0 -->
+            <div class="fs-3 fw-bold">{{ kpis.hoje or 0 }}</div>
+          </div>
+          <!-- Ícone de bicicleta (Bootstrap Icons) -->
+          <i class="bi bi-bicycle fs-1 opacity-75"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Solicitações em andamento -->
+  <div class="col-12 col-md-4">
+    <div class="card glass shadow-sm h-100">
+      <div class="card-body">
+        <div class="text-muted">Em andamento</div>
+        <div class="fs-3 fw-bold">{{ kpis.andamento or 0 }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Solicitações concluídas -->
+  <div class="col-12 col-md-4">
+    <div class="card glass shadow-sm h-100">
+      <div class="card-body">
+        <div class="text-muted">Concluídas</div>
+        <div class="fs-3 fw-bold">{{ kpis.concluidas or 0 }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card principal com a tabela de solicitações -->
+<div class="card glass shadow-sm">
+  
+  <!-- Cabeçalho do card -->
+  <div class="card-header d-flex justify-content-between align-items-center bg-transparent border-0">
+    <h2 class="h5 mb-0">Solicitações de Motoboy</h2>
+    
+    <!-- Botões de ação (nova solicitação e exportar) -->
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('nova_solicitacao') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>Nova
+      </a>
+      <a href="{{ url_for('exportar_solicitacoes') }}" class="btn btn-outline-light">
+        <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar
+      </a>
+    </div>
+  </div>
+
+  <!-- Tabela com as solicitações -->
+  <div class="table-responsive">
+    <table class="table table-dark table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Solicitante</th>
+          <th>Origem</th>
+          <th>Destino</th>
+          <th>Status</th>
+          <th class="text-end">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <!-- Loop pelas solicitações vindas do backend -->
+        {% for row in solicitacoes %}
+        <tr>
+          <td>#{{ row.id }}</td>
+          <!-- Usa default '-' caso não haja data -->
+          <td>{{ row.data|default('-', true) }}</td>
+          <td>{{ row.solicitante }}</td>
+          <td>{{ row.origem }}</td>
+          <td>{{ row.destino }}</td>
+          <td>
+            <!-- Badge colorido de acordo com o status -->
+            <span class="badge bg-status-{{ row.status|lower }}">{{ row.status }}</span>
+          </td>
+          <td class="text-end">
+            <div class="btn-group btn-group-sm">
+              
+              <!-- Botão de visualizar -->
+              <a href="{{ url_for('ver_solicitacao', id=row.id) }}" class="btn btn-outline-light">
+                <i class="bi bi-eye"></i>
+              </a>
+              
+              <!-- Botão de editar -->
+              <a href="{{ url_for('editar_solicitacao', id=row.id) }}" class="btn btn-outline-light">
+                <i class="bi bi-pencil"></i>
+              </a>
+              
+              <!-- Botão de excluir (com confirmação JS) -->
+              <form method="post" action="{{ url_for('deletar_solicitacao', id=row.id) }}" 
+                    onsubmit="return confirm('Confirmar exclusão?');">
+                <button class="btn btn-outline-danger">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        
+        {% else %}
+        <!-- Caso não existam registros -->
+        <tr>
+          <td colspan="7" class="text-center text-muted py-4">Sem registros.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

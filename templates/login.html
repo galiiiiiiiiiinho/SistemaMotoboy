@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{# esse template herda o layout base (com topbar, fundo, etc.) #}
+
+{% block content %}
+  <!-- ======================
+       Wrapper centralizado
+       ======================
+       Envolve o formulário de login e garante
+       que ele fique centralizado na tela.
+  -->
+  <div class="login-wrap">
+  
+    <!-- ======================
+         Formulário de login
+         ======================
+         - method="post": envia dados via POST
+         - action="{{ url_for('login') }}": chama a rota 'login' do Flask
+         - autocomplete="off": evita o navegador sugerir dados salvos
+    -->
+    <form method="post" action="{{ url_for('login') }}" 
+          class="login-card" autocomplete="off">
+      
+      <!-- Token CSRF escondido
+           Protege contra ataques de requisições forjadas (Cross-Site Request Forgery).
+           O backend gera e valida esse token. 
+      -->
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+      
+      <!-- ======================
+           Cabeçalho do cartão de login
+           ====================== -->
+      <div class="login-head">
+        <!-- Logo da GICON -->
+        <img src="/static/img/gicon-marca.svg" alt="GICON" class="login-logo">
+        <!-- Título principal -->
+        <div class="login-title">Acesso • Motoboy</div>
+        <!-- Subtítulo com nome da empresa -->
+        <div class="login-sub">GICON Contabilidade</div>
+      </div>
+
+      <!-- Rótulo associado ao campo de PIN -->
+      <label for="pin">PIN</label>
+
+      <!-- ======================
+           Campo de entrada do PIN
+           ======================
+           - type="password": oculta caracteres (mostra bolinhas/asteriscos)
+           - inputmode="numeric": sugere teclado numérico em dispositivos móveis
+           - pattern="[0-9]{4,6}": só aceita dígitos, entre 4 e 6
+           - minlength/maxlength: reforço de limites
+           - placeholder="****": dica visual
+           - autocomplete="one-time-code": permite preenchimento automático (códigos SMS/email)
+           - autocapitalize="off" / autocorrect="off": desativa correção automática
+           - required: campo obrigatório
+           - autofocus: já foca nesse campo ao carregar a página
+      -->
+      <input
+        id="pin"
+        name="pin"
+        type="password"
+        inputmode="numeric"
+        pattern="[0-9]{4,6}"
+        minlength="4"
+        maxlength="6"
+        placeholder="****"
+        autocomplete="one-time-code"
+        autocapitalize="off"
+        autocorrect="off"
+        required
+        autofocus
+      >
+
+      <!-- Mensagem de erro:
+           aparece se a variável "error" for enviada pelo backend -->
+      {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+      <!-- Botão para enviar o formulário -->
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+{% endblock %}
